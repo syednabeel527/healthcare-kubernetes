@@ -2,14 +2,35 @@ const express = require("express");
 
 const app = express();
 
-app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Healthcare API is running");
-});
-
 const PORT = 5000;
 
+// Database
+const connectDB = require("./config/db");
+
+// Middleware
+app.use(express.json());
+
+// Routes
+const doctorRoutes = require("./routes/doctorRoutes");
+const patientRoutes = require("./routes/patientRoutes");
+const appointmentRoutes = require("./routes/appointmentRoutes");
+
+// Home
+app.get("/", (req, res) => {
+    res.json({
+        message: "Healthcare API is running"
+    });
+});
+
+// Healthcare APIs
+app.use("/api/doctors", doctorRoutes);
+app.use("/api/patients", patientRoutes);
+app.use("/api/appointments", appointmentRoutes);
+
+// Connect Database
+connectDB();
+
+// Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
