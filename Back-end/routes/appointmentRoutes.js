@@ -3,9 +3,14 @@ const express = require("express");
 const router = express.Router();
 
 const {
-    getAppointments
+    getAppointments,
+    createAppointment
 } = require("../controllers/appointmentController");
 
-router.get("/", getAppointments);
+const protect = require("../middleware/authMiddleware");
+
+router.get("/", protect, getAppointments);
+
+router.post("/", protect, createAppointment);
 
 module.exports = router;

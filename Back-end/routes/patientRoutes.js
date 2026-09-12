@@ -7,8 +7,10 @@ const {
     createPatient
 } = require("../controllers/patientController");
 
-router.get("/", getPatients);
+const protect = require("../middleware/authMiddleware");
 
-router.post("/", createPatient);
+router.get("/", protect, getPatients);
+
+router.post("/", protect, createPatient);
 
 module.exports = router;

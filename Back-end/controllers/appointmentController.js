@@ -1,24 +1,57 @@
-const getAppointments = (req, res) => {
+const Appointment = require("../models/Appointment");
 
-    res.json([
-        {
-            id: 1,
-            patient: "Ali",
-            doctor: "Dr. Ahmed",
-            date: "2026-09-10",
-            status: "Scheduled"
-        },
-        {
-            id: 2,
-            patient: "Sinchan",
-            doctor: "Dr. Sara",
-            date: "2026-09-11",
-            status: "Completed"
-        }
-    ]);
+const getAppointments = async (req, res) => {
+
+    try {
+
+        const appointments = await Appointment.find()
+            .populate("patient", "name email role")
+            .populate("doctor", "name email role");
+
+        res.json(appointments);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Failed to fetch appointments",
+            error: error.message
+        });
+
+    }
 
 };
 
+
+const createAppointment = async (req, res) => {
+
+    try {
+
+        const { doctor, date } = req.body;
+
+        const appointment = await Appointment.create({
+            patient: req.user.id,
+            doctor,
+            date
+        });
+
+        res.status(201).json({
+            message: "Appointment created successfully",
+            appointment
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: "Failed to create appointment",
+            error: error.message
+        });
+
+    }
+
+};
+
+
 module.exports = {
-    getAppointments
+    getAppointments,
+    createAppointment
 };
