@@ -10,7 +10,6 @@ const {
 const protect = require("../middleware/authMiddleware");
 
 router.get("/", protect, getPatients);
-
 router.post("/", protect, createPatient);
 
 module.exports = router;

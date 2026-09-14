@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
@@ -9,6 +10,7 @@ const connectDB = require("./config/db");
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 // Routes
 const doctorRoutes = require("./routes/doctorRoutes");
