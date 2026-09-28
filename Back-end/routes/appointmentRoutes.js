@@ -8,9 +8,22 @@ const {
 } = require("../controllers/appointmentController");
 
 const protect = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/roleMiddleware");
 
-router.get("/", protect, getAppointments);
+// Patients and doctors can view appointments
+router.get(
+    "/",
+    protect,
+    authorizeRoles("patient", "doctor"),
+    getAppointments
+);
 
-router.post("/", protect, createAppointment);
+// Only patients can create appointments
+router.post(
+    "/",
+    protect,
+    authorizeRoles("patient"),
+    createAppointment
+);
 
 module.exports = router;
