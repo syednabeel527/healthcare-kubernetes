@@ -1,10 +1,21 @@
 const Appointment = require("../models/Appointment");
 
 const getAppointments = async (req, res) => {
-
     try {
 
-        const appointments = await Appointment.find()
+        let filter = {};
+
+        // Patients can see only their own appointments
+        if (req.user.role === "patient") {
+            filter.patient = req.user.id;
+        }
+
+        // Doctors can see only appointments assigned to them
+        if (req.user.role === "doctor") {
+            filter.doctor = req.user.id;
+        }
+
+        const appointments = await Appointment.find(filter)
             .populate("patient", "name email role")
             .populate("doctor", "name email role");
 
@@ -18,7 +29,6 @@ const getAppointments = async (req, res) => {
         });
 
     }
-
 };
 
 
